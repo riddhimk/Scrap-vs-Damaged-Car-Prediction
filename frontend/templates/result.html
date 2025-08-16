@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <style>
+    body {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+  
+    body.fade-in {
+      opacity: 1;
+    }
+  </style>  
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scrappix | Analysis Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('fade-in');
+    });
+  </script>
+
+  <nav class="navbar">
+    <div class="logo">
+      <span class="highlight">GREENFLEET – AI-Powered Car Damage Detection</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="main-container">
+    <div class="left-sidebar">
+      <h3>📷 Uploaded Image</h3>
+      <img src="{{ url_for('uploaded_file', filename=image) }}" alt="Uploaded Car" id="preview-img" />
+    </div>
+
+    <div class="right-content">
+      <h1 class="result-title">🔍 Analysis Result</h1>
+      <h2 id="resultText" class="result-text">Result: {{ result }}</h2>
+      <p id="confidenceText" class="confidence-text">{{ confidence }}</p>
+
+      <div class="analysis-result">
+        <h3>🔎 Summary of Analysis</h3>
+        <p>
+          Our AI model analyzed your uploaded image using advanced deep learning techniques. Based on visible damage, wear, and overall condition, the car has been classified as 
+          <strong class="result-label">{{ result }}</strong>. This helps in making informed decisions regarding repair, resale, or parting out the vehicle.
+        </p>
+      </div>
+
+      <div class="next-steps">
+        <h3>🧭 What Can You Do Next?</h3>
+        <div class="steps-grid">
+          <div class="step-card">
+            <h4>♻ Recycle Parts</h4>
+            <p>Find trusted auto-recycling partners to salvage usable parts and reduce waste.</p>
+          </div>
+          <div class="step-card">
+            <h4>💰 Estimate Scrap Value</h4>
+            <p>Use a scrap value estimator to get a price based on your car’s condition.</p>
+          </div>
+          <div class="step-card">
+            <h4>📸 Try Another Image</h4>
+            <p>If the result doesn’t look right, upload another photo from a different angle.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback -->
+      <section class="feedback-section">
+        <h2 class="feedback-title">Share Your Feedback</h2>
+        <div class="feedback-form">
+          <form id="feedbackForm" method="POST">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="Your email">
+            </div>
+            <div class="form-group">
+              <label for="message">Feedback</label>
+              <textarea id="message" name="message" placeholder="Your feedback or suggestions"></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Send Feedback</button>
+          </form>
+          {% if feedback_message %}
+            <p id="feedback-message" class="feedback-message">{{ feedback_message }}</p>
+          {% endif %}
+        </div>
+      </section>
+
+      <div class="result-buttons">
+        <button onclick="window.location.href='/'" class="action-button">🔁 Try Another Image</button>
+        <button onclick="window.location.href='/'" class="action-button home-button">🏠 Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>🔐 Your images are never stored or shared. Privacy is our priority.</p>
+    <p>&copy; 2025 GREENFLEET - AI-Powered Car Damage Detection</p>
+  </footer>
+</body>
+</html>

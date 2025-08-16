@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scrappix - AI Car Damage Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
+    .image-preview img {
+      max-width: 300px;
+      height: auto;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body id="top">
+<nav class="navbar">
+  <div class="logo">
+    <span class="highlight">GREENFLEET – AI-Powered Car Damage Detection</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#top">Home</a></li>
+    <li><a href="#features">How It Works</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<main class="container">
+  <!-- Upload Section -->
+  <section class="upload-section" id="upload">
+    <h2>Check Vehicle Condition Now</h2>
+    <form action="{{ url_for('analyze') }}" method="POST" enctype="multipart/form-data">
+      <div class="upload-box">
+        <div class="upload-area" id="dropZone">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>Drag & drop car image or click to browse</p>
+        </div>
+        <input type="file" name="file" id="fileInput" accept="image/*" required onchange="previewImage()" />
+        <div id="previewScroll"></div>
+      </div>
+      <button class="analyze-btn" type="submit">
+        <i class="fas fa-search"></i> Analyze Image
+      </button>
+    </form>
+  </section>
+
+  <!-- Hero Section -->
+  <header class="hero" style="background-image: url('{{ url_for('static', filename='images/a-3d-render-of-a-sleek-futuristic-green-_D1NzD3CiQdiXzMynjqH08w_5PaQEnmETheai87zIqupOw.jpeg') }}');">
+    <div class="hero-content">
+      <h1>AI-Powered <span class="highlight">Car Damage</span> Detection</h1>
+      <p class="tagline">Instant analysis of vehicle condition - Scrapped or Damaged</p>
+    </div>
+  </header>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="feature-card">
+      <img src="{{ url_for('static', filename='images/a-person-taking-a-photo-of-a-damaged-car-using-a-smar.jpg') }}" alt="Upload Image">
+      <h3>Upload Image</h3>
+      <p>Simply take or upload a photo of the vehicle</p>
+    </div>
+    <div class="feature-card">
+      <img src="{{ url_for('static', filename='images/output.jpg') }}" alt="AI Analysis">
+      <h3>AI Analysis</h3>
+      <p>Our advanced model examines every detail</p>
+    </div>
+    <div class="feature-card">
+      <img src="{{ url_for('static', filename='images/output (1).jpg') }}" alt="Get Results">
+      <h3>Get Results</h3>
+      <p>Receive immediate condition classification</p>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section class="use-cases">
+    <h2>Who Can Benefit</h2>
+    <div class="cases-grid">
+      <div class="case-card"><h3>Insurance Companies</h3><p>Quickly assess claims and vehicle damage</p></div>
+      <div class="case-card"><h3>Used Car Dealers</h3><p>Evaluate trade-ins and inventory condition</p></div>
+      <div class="case-card"><h3>Repair Shops</h3><p>Initial damage assessment before inspection</p></div>
+      <div class="case-card"><h3>Recycling Centers</h3><p>Identify scrapped vehicles efficiently</p></div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about-section">
+    <h2 class="section-title">About GREENFLEET</h2>
+    <div class="about-content">
+      <div class="about-text">
+        <p>
+          <b><big>
+            Upload your car image, get it analyzed by our top-of-the-line AI model, and get insights on whether it's time to say goodbye to your beloved car or that bad boy still has some miles remaining!
+          </big></b>
+        </p>
+        <div class="team-stats">
+          <div class="stat-item"><span class="stat-number">1k</span><span class="stat-label">Images Analyzed</span></div>
+          <div class="stat-item"><span class="stat-number">0</span><span class="stat-label">Partners</span></div>
+        </div>
+      </div>
+      <div class="about-image">
+        <img src="{{ url_for('static', filename='images/a-3d-render-of-a-sleek-futuristic-sports_XKbFmFw0Rwiz5PFFlSAnkw_PAzTAPDCSiOk5Qun9udJDQ.jpeg') }}" alt="Our Team">
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p>🔐 Your images are never stored or shared. Privacy is our priority.</p>
+  <p>&copy; 2025 GREENFLEET - AI-Powered Car Damage Detection</p>
+</footer>
+
+<script>
+  // Fade-in
+  window.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('fade-in');
+  });
+
+  // Fade-out before form submit
+  document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    document.body.classList.remove("fade-in");
+    document.body.style.opacity = 0;
+    setTimeout(() => this.submit(), 300);
+  });
+
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault(); dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+      fileInput.files = e.dataTransfer.files;
+      previewImage();
+    }
+  });
+
+  function previewImage() {
+    const preview = document.getElementById('previewScroll');
+    const file = fileInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.innerHTML = `<div class="image-preview">
+            <img src="${e.target.result}" alt="Uploaded Image" />
+            <button class="remove-btn" onclick="clearImage()"><i class="fas fa-times"></i></button>
+          </div>`;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.innerHTML = '';
+    }
+  }
+
+  function clearImage() {
+    fileInput.value = '';
+    document.getElementById('previewScroll').innerHTML = '';
+  }
+</script>
+</body>
+</html>
