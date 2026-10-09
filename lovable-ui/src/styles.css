@@ -176,3 +176,105 @@
 @media (prefers-reduced-motion: reduce) {
   .lane-run, .car-bob { animation: none; }
 }
+
+/* GreenFleet Custom Glowing Orb & Aura Cursor (Yellow-Green Palette) */
+@media (hover: hover) and (pointer: fine) {
+  html, body, a, button, input, select, textarea, label, [role="button"] {
+    cursor: none !important;
+  }
+}
+
+#gf-cursor-orb {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  margin-top: -4.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #edff66 40%, #c4f924 85%, #9ae600 100%);
+  box-shadow: 
+    0 0 8px #edff66,
+    0 0 16px rgba(196, 249, 36, 0.95),
+    0 0 28px rgba(160, 230, 10, 0.6);
+  pointer-events: none;
+  z-index: 2147483647;
+  opacity: 0;
+  transform: translate3d(-200px, -200px, 0);
+  transition: opacity 0.25s ease, width 0.15s ease, height 0.15s ease, margin 0.15s ease, box-shadow 0.15s ease;
+  will-change: transform;
+}
+
+#gf-cursor-aura {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(210, 253, 60, 0.7);
+  background: radial-gradient(circle, rgba(220, 255, 60, 0.22) 0%, rgba(180, 245, 30, 0.08) 55%, transparent 75%);
+  box-shadow: 
+    0 0 14px rgba(210, 253, 60, 0.45),
+    inset 0 0 8px rgba(210, 253, 60, 0.25);
+  pointer-events: none;
+  z-index: 2147483646;
+  opacity: 0;
+  transform: translate3d(-200px, -200px, 0);
+  transition: opacity 0.3s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, width 0.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.2s cubic-bezier(0.16, 1, 0.3, 1), margin 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+#gf-cursor-aura.is-hover {
+  width: 48px;
+  height: 48px;
+  margin-left: -24px;
+  margin-top: -24px;
+  border-color: rgba(235, 255, 80, 0.95);
+  background: radial-gradient(circle, rgba(235, 255, 80, 0.35) 0%, rgba(195, 255, 40, 0.14) 60%, transparent 80%);
+  box-shadow: 
+    0 0 22px rgba(212, 255, 50, 0.75),
+    inset 0 0 12px rgba(212, 255, 50, 0.4);
+}
+
+#gf-cursor-orb.is-hover {
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  margin-top: -3px;
+  background: #ffffff;
+  box-shadow: 
+    0 0 10px #ffffff,
+    0 0 22px #edff66;
+}
+
+#gf-cursor-aura.is-active {
+  width: 26px;
+  height: 26px;
+  margin-left: -13px;
+  margin-top: -13px;
+  border-color: rgba(255, 255, 120, 1);
+  box-shadow: 
+    0 0 25px rgba(220, 255, 60, 0.95),
+    inset 0 0 12px rgba(220, 255, 60, 0.55);
+}
+
+#gf-cursor-orb.is-active {
+  width: 13px;
+  height: 13px;
+  margin-left: -6.5px;
+  margin-top: -6.5px;
+  box-shadow: 
+    0 0 12px #ffffff,
+    0 0 30px rgba(230, 255, 60, 1),
+    0 0 45px rgba(180, 255, 30, 0.85);
+}
+
+@media (pointer: coarse) {
+  #gf-cursor-orb, #gf-cursor-aura {
+    display: none !important;
+  }
+}

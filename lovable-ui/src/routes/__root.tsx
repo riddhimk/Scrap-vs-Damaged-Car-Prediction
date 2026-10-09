@@ -114,11 +114,117 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function GlowingCursor() {
+  useEffect(() => {
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return;
+
+    const orb = document.createElement('div');
+    orb.id = 'gf-cursor-orb';
+    const aura = document.createElement('div');
+    aura.id = 'gf-cursor-aura';
+
+    document.body.appendChild(aura);
+    document.body.appendChild(orb);
+
+    let mouseX = -200, mouseY = -200;
+    let auraX = -200, auraY = -200;
+    let isVisible = false;
+    let animId: number;
+
+    const onMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!isVisible) {
+        isVisible = true;
+        orb.style.opacity = '1';
+        aura.style.opacity = '1';
+        auraX = mouseX;
+        auraY = mouseY;
+      }
+      orb.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+    };
+
+    const onMouseLeave = () => {
+      orb.style.opacity = '0';
+      aura.style.opacity = '0';
+      isVisible = false;
+    };
+
+    const onMouseEnter = () => {
+      orb.style.opacity = '1';
+      aura.style.opacity = '1';
+      isVisible = true;
+    };
+
+    const onMouseDown = () => {
+      orb.classList.add('is-active');
+      aura.classList.add('is-active');
+    };
+
+    const onMouseUp = () => {
+      orb.classList.remove('is-active');
+      aura.classList.remove('is-active');
+    };
+
+    const selector = 'a, button, input, label, select, textarea, [role="button"], [tabindex]:not([tabindex="-1"]), .cursor-pointer';
+
+    const onMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest?.(selector)) {
+        orb.classList.add('is-hover');
+        aura.classList.add('is-hover');
+      }
+    };
+
+    const onMouseOut = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest?.(selector)) {
+        orb.classList.remove('is-hover');
+        aura.classList.remove('is-hover');
+      }
+    };
+
+    const renderAura = () => {
+      if (isVisible) {
+        auraX += (mouseX - auraX) * 0.18;
+        auraY += (mouseY - auraY) * 0.18;
+        aura.style.transform = `translate3d(${auraX}px, ${auraY}px, 0)`;
+      }
+      animId = requestAnimationFrame(renderAura);
+    };
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    document.addEventListener('mouseleave', onMouseLeave);
+    document.addEventListener('mouseenter', onMouseEnter);
+    document.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mouseover', onMouseOver, { passive: true });
+    document.addEventListener('mouseout', onMouseOut, { passive: true });
+    animId = requestAnimationFrame(renderAura);
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseleave', onMouseLeave);
+      document.removeEventListener('mouseenter', onMouseEnter);
+      document.removeEventListener('mousedown', onMouseDown);
+      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('mouseover', onMouseOver);
+      document.removeEventListener('mouseout', onMouseOut);
+      cancelAnimationFrame(animId);
+      orb.remove();
+      aura.remove();
+    };
+  }, []);
+
+  return null;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
+      <GlowingCursor />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>
