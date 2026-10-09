@@ -1,64 +1,93 @@
 # GreenFleet: AI-Based Vehicle Damage Assessment
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-greenfleet--rust.vercel.app-brightgreen?logo=vercel)](https://greenfleet-rust.vercel.app/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
+
+> 🌐 **Live Cloud Application**: [https://greenfleet-rust.vercel.app/](https://greenfleet-rust.vercel.app/)  
+> 📁 **Legacy Code & Artifacts**: Historical training scripts and prior model files are preserved in [`old/`](./old).
+
+---
+
 ## Project Overview
-GreenFleet is a web application that performs preliminary assessment of vehicle damage using deep learning. It allows users to upload a photo of a vehicle and instantly classify its condition as either **Damaged** (repairable) or **Scrapable** (end-of-life).
+**GreenFleet** is an AI-powered vehicle assessment platform designed for instant automotive damage screening. Drivers, fleet operators, and insurance adjusters can upload a single vehicle photo and immediately receive:
+- **Condition Classification**: Categorized into **Undamaged (Pristine)**, **Damaged (Repairable)**, or **Scrapable (Unrepairable / Total Loss)**.
+- **Confidence Score & Breakdown**: Granular probability distribution across vehicle conditions.
+- **Detailed Damage Reasoning**: Visual evidence summary highlighting damaged components, impact severity, and repairability.
 
-## Business Problem & Solution
-Insurance adjusters and salvage yards often spend significant time categorizing vehicles after accidents. GreenFleet provides a rapid, AI-driven first pass to automatically flag whether a vehicle is likely salvageable or headed for the scrap yard. This improves triaging efficiency and streamlines workflows.
+---
 
-## Model Description
-The core inference engine uses an EfficientNet-based Convolutional Neural Network (CNN). 
-**Note:** This project reuses an existing, pre-trained model (`recall_boosted_model.keras`). **The model was not retrained during this project.** We simply loaded the existing static weights and improved the application architecture, preprocessing consistency, and user experience around it.
+## Architecture & Technology Stack
+- **Frontend**: Modern SPA built with high-performance responsive UI components, real-time assessment states, and custom branding.
+- **Backend**: Python Flask application running serverlessly via `@vercel/python` on Vercel.
+- **AI Engine**: Multimodal Vision Language Model powered by Google Gemini API (`gemini-flash-lite-latest` / `gemini-2.5-flash-lite`), paired with a robust fallback vision engine.
+- **Zero-Cost Academic Cloud Deployment**: Hosted completely free on Vercel with zero cold-storage lock-in and secured environment variables.
 
-## Installation and Setup
-
-1. **Clone the repository and set up a virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use: venv\Scripts\activate
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Run the Application**
-   ```bash
-   python app.py
-   ```
-
-4. **Access the Web UI**
-   Open your browser and navigate to the local URL: `http://127.0.0.1:5000`
+---
 
 ## Project Structure
 ```text
 GreenFleet/
-├── app.py                  # Main Flask application and routes
-├── requirements.txt        # Project dependencies
-├── README.md               # This file
-├── model/                  # Directory containing the pre-trained Keras model
-├── services/               # Core logic decoupled from routing
-│   ├── predictor.py        # Model loading, threshold evaluation, and prediction
-│   ├── preprocessing.py    # Robust image validation and dynamic resizing
-│   └── tta.py              # Test-Time Augmentation logic
-├── templates/              # HTML templates (index, result)
-├── static/                 # CSS styling and Client-side JS
-├── uploads/                # Temporary directory for user uploads
-├── evaluate_model.py       # Standalone evaluation script
-└── feedback.json           # User feedback store
+├── app.py                  # Main Flask application and serverless routes
+├── requirements.txt        # Lightweight, serverless-optimized dependencies
+├── vercel.json             # Vercel serverless runtime & routing configuration
+├── .vercelignore           # Excludes heavy legacy archives from cloud builds
+├── README.md               # Project documentation and deployment details
+├── services/               # Decoupled AI & vision services
+│   ├── predictor.py        # Gemini multimodal reasoning & fallback predictor
+│   ├── preprocessing.py    # Image validation, security sanitization, resizing
+│   └── tta.py              # Test-Time Augmentation utilities
+├── static/                 # Production precompiled SPA assets, CSS, icons
+├── templates/              # Production HTML templates
+├── lovable-ui/             # Source UI components and design system
+└── old/                    # Preserved historical repository files & scripts
+    ├── frontend/           # Original legacy UI
+    ├── mode_training.py    # Original CNN training script
+    └── Demo Video.mp4      # Original project demonstration video
 ```
 
-## Evaluation Instructions
-To evaluate the static model against new labeled validation data:
-1. Organize your test images into two folders: `data/val/damaged/` and `data/val/scrap/`.
-2. Run the evaluation script:
-   ```bash
-   python evaluate_model.py
-   ```
-3. The script will dynamically read the expected model input size, process the images, and output key metrics such as Accuracy, F1-Score, Confusion Matrix, and ROC-AUC. It also compares the default threshold (`0.41`) against standard thresholds (`0.50`).
+---
 
-## Limitations
-* **Preliminary Assessment Only:** This tool is not a substitute for a professional, in-person vehicle inspection.
-* **Sensitivity to Angles/Quality:** The model's accuracy heavily depends on lighting, image resolution, and whether the damaged section of the vehicle is clearly visible in the photo.
-* **Domain Shift:** Predictions rely on the distribution of the original training data. Vehicles that look drastically different from the training set may yield unpredictable results.
+## Local Installation and Setup
+
+### 1. Clone the repository and create a virtual environment
+```bash
+git clone https://github.com/riddhimk/Scrap-vs-Damaged-Car-Prediction.git
+cd Scrap-vs-Damaged-Car-Prediction
+python -m venv venv
+# On Windows:
+.\venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+```
+
+### 2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Configure Gemini API Key
+Create an `api.txt` file in the project root (or set the `GEMINI_API_KEY` environment variable):
+```text
+<YOUR_GEMINI_API_KEY>
+```
+
+### 4. Run the Application locally
+```bash
+python app.py
+```
+Open your browser and navigate to: `http://127.0.0.1:5000`
+
+---
+
+## Cloud Deployment (Vercel)
+This repository is pre-configured with `vercel.json` for one-click deployment:
+1. Import repository into **Vercel**.
+2. Select **Framework Preset**: `Other`.
+3. Set **Environment Variable**: `GEMINI_API_KEY = <your-api-key>`.
+4. Click **Deploy**.
+
+---
+
+## Disclaimer
+GreenFleet provides preliminary, assistive damage triage from visual imagery and does not replace certified in-person structural or mechanical automotive inspections.
