@@ -1,0 +1,37 @@
+# API keys & Secrets
+api.txt
+api.text
+.env
+*.key
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Node dependencies
+node_modules/
+lovable-ui/node_modules/
+
+# User uploads & temporary files
+uploads/*
+!uploads/.gitkeep
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large ML models (>100MB limit on GitHub)
+model/
+*.keras
+*.h5
+
+# Datasets & Large Archives
+data/
+*.zip
+*.tar.gz
+
+# OS generated
+.DS_Store
+Thumbs.db

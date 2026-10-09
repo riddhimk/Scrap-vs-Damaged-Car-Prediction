@@ -1,0 +1,1 @@
+var e;function t(t){e?.imageUrl&&e.imageUrl.startsWith(`blob:`)&&e.imageUrl!==t.imageUrl&&URL.revokeObjectURL(e.imageUrl),e=t}function n(t){e&&(e.result=t)}function r(){return e}export{t as n,n as r,r as t};

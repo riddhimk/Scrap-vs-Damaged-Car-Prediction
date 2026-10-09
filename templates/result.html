@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Complete | GreenFleet</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="logo-link">
+            <span class="logo-glyph">&#10022;</span> GREENFLEET
+        </a>
+        <div class="model-badge">Gemini 3.8 Flash Vision</div>
+    </nav>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="result-hero">
+        <div class="result-title-row reveal">
+            <h2>Assessment Complete</h2>
+            <a href="/" class="back-link">&#8592; Analyze Another Vehicle</a>
+        </div>
+        
+        <div class="result-grid">
+            <div class="result-image-card reveal">
+                <img src="{{ url_for('uploaded_file', filename=image) }}" alt="Inspected Vehicle">
+            </div>
+            
+            <div class="result-details-card">
+                <!-- Classification Box -->
+                <div class="prediction-box reveal {{ badge_class }}">
+                    <div class="prediction-label">Condition Classification</div>
+                    <div class="prediction-text">{{ prediction }}</div>
+                    <span class="severity-tag">{{ damage_severity }}</span>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="metrics-grid reveal">
+                    <div class="metric-box">
+                        <span class="metric-label">Confidence Score</span>
+                        <span class="metric-value">{{ confidence }}</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-label">Assessment Certainty</span>
+                        <span class="metric-value" style="color: {% if confidence_category == 'High' %}var(--accent-pristine){% elif confidence_category == 'Moderate' %}var(--accent-damaged){% else %}var(--accent-scrap){% endif %}">
+                            {{ confidence_category }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Gemini AI Reasoning -->
+                {% if detailed_reasoning %}
+                <div class="reasoning-card reveal">
+                    <h4><span>&#10022;</span> AI Inspector Technical Breakdown</h4>
+                    <p>{{ detailed_reasoning }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Feedback Section -->
+                <div class="feedback-section reveal">
+                    <h4>Adjuster Verification</h4>
+                    <form action="/feedback" method="POST" class="feedback-form">
+                        <input type="hidden" name="image" value="{{ image }}">
+                        <input type="hidden" name="prediction" value="{{ prediction }}">
+                        <input type="hidden" name="prob_scrap" value="{{ prob_scrap }}">
+                        
+                        <div class="feedback-options">
+                            <label><input type="radio" name="agreement" value="agree" required> Accurate Assessment</label>
+                            <label><input type="radio" name="agreement" value="disagree"> Disagree</label>
+                            <label><input type="radio" name="agreement" value="unsure"> Needs Field Inspection</label>
+                        </div>
+                        <textarea name="comments" placeholder="Optional inspector notes / remarks..." rows="3"></textarea>
+                        <button type="submit" class="btn-secondary">Submit Inspector Report</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+
