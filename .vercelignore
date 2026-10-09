@@ -1,0 +1,6 @@
+# Vercel Ignore - Exclude legacy files and non-production assets from serverless bundle
+old/
+.vscode/
+data/
+*.zip
+*.tar.gz
